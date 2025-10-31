@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DrMcGi’s SaaS Co. — Luxury software. Real business impact.</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            obsidian: '#0A0B0E',
+            ink: '#0F1117',
+            glowGold1: '#F5D06F',
+            glowGold2: '#FFF1B8',
+            neon1: '#7DF9FF',
+            neon2: '#A1FFE9',
+            platinum: '#E6EEF7'
+          },
+          fontFamily: {
+            display: ['Inter','system-ui','sans-serif'],
+            serif: ['Georgia','serif']
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* Gradients */
+    .gradient-gold { background: linear-gradient(90deg, #F5D06F 0%, #FFF1B8 100%); }
+    .gradient-neon { background: linear-gradient(90deg, #7DF9FF 0%, #A1FFE9 100%); }
+
+    /* Shimmer headline */
+    .shimmer {
+      background: linear-gradient(90deg, #F5D06F, #FFF1B8, #F5D06F);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer 6s linear infinite;
+    }
+    @keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+
+    /* Pulse for WhatsApp button */
+    @keyframes pulse {
+      0%,100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37,211,102,0.6); }
+      50% { transform: scale(1.05); box-shadow: 0 0 20px 10px rgba(37,211,102,0); }
+    }
+    #waButton { animation: pulse 3s infinite; }
+
+    /* Fade-up animation */
+    .fade-up { opacity: 0; transform: translateY(20px); transition: all 1s ease; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* Active highlights */
+    .tier-active, .package-active {
+      border-color: #F5D06F !important;
+      box-shadow: 0 0 24px rgba(245,208,111,0.25);
+    }
+
+    /* Logo wordmark + glowing underline */
+    .logo-text {
+      font-family: 'Inter', sans-serif;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      font-size: 1.6rem;
+      background: linear-gradient(90deg, #7DF9FF 0%, #A1FFE9 50%, #E6EEF7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      position: relative;
+      display: inline-block;
+    }
+    .logo-text::after {
+      content: "";
+      position: absolute;
+      left: 0; right: 0; bottom: -6px;
+      height: 3px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, #F5D06F, #FFF1B8);
+      box-shadow: 0 0 12px rgba(245,208,111,0.8),
+                  0 0 24px rgba(245,208,111,0.6),
+                  0 0 36px rgba(245,208,111,0.4);
+      animation: glowPulse 3s ease-in-out infinite;
+    }
+    @keyframes glowPulse {
+      0%, 100% {
+        box-shadow: 0 0 12px rgba(245,208,111,0.8),
+                    0 0 24px rgba(245,208,111,0.6),
+                    0 0 36px rgba(245,208,111,0.4);
+      }
+      50% {
+        box-shadow: 0 0 20px rgba(245,208,111,1),
+                    0 0 40px rgba(245,208,111,0.8),
+                    0 0 60px rgba(245,208,111,0.6);
+      }
+    }
+
+    /* Glass glow card */
+    .glass-glow {
+      position: relative;
+      border-radius: 1rem;
+      background: rgba(15, 17, 23, 0.55);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      box-shadow: 0 0 40px rgba(125, 249, 255, 0.25);
+    }
+    .glass-glow::before {
+      content: "";
+      position: absolute;
+      inset: -6px;
+      border-radius: inherit;
+      background: radial-gradient(1200px 400px at 20% 20%, rgba(125,249,255,0.35), transparent 60%),
+                  radial-gradient(900px 300px at 80% 80%, rgba(161,255,233,0.25), transparent 60%);
+      filter: blur(40px);
+      z-index: -1;
+    }
+
+    /* Breakdown rows */
+    .breakdown-row { display: grid; grid-template-columns: 1fr auto; gap: 12px; }
+    .divider { border-top: 1px solid rgba(255,255,255,0.08); }
+  </style>
+</head>
+
+<body class="bg-obsidian text-white antialiased">
+  <!-- Scroll progress -->
+  <div id="scrollProgress" class="fixed top-0 left-0 h-[2px] z-50 gradient-gold" style="width:0;"></div>
+
+  <!-- Nav -->
+  <nav class="fixed top-0 left-0 right-0 z-40 backdrop-blur-xl bg-ink/60 border-b border-white/5">
+    <div class="mx-auto max-w-6xl px-6 h-16 flex items-center justify-between">
+      <a href="#home" class="logo-text">DrMcGi’s SaaS Co.</a>
+      <div class="flex items-center gap-6 text-sm text-white/80">
+        <a href="#home" class="hover:text-white">Home</a>
+        <a href="#packages" class="hover:text-white">Packages</a>
+        <a href="#pricing" class="hover:text-white">Pricing</a>
+        <a href="#case-studies" class="hover:text-white">Case Studies</a>
+        <a href="#contact" class="hover:text-white">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <main id="home" class="pt-20">
+    <!-- Hero with glass glow -->
+    <section class="relative overflow-hidden">
+      <div class="mx-auto max-w-5xl px-6 py-24">
+        <div class="glass-glow px-8 py-16 text-center">
+          <h1 class="font-display text-5xl md:text-6xl leading-tight">
+            Luxury software.<br/>
+            <span class="shimmer">Real business impact.</span>
+          </h1>
+          <p class="mt-6 max-w-2xl mx-auto text-white/80 text-lg">
+            We don’t ship features. We orchestrate experiences that feel inevitable—from MVP to enterprise scale.
+          </p>
+          <div class="mt-10 flex gap-4 justify-center">
+            <a href="#pricing" class="px-5 py-3 rounded-md bg-white text-ink text-sm font-medium hover:opacity-90 transition">Explore tiers</a>
+            <a href="#contact" class="px-5 py-3 rounded-md border border-white/20 text-white text-sm hover:border-white/40 transition">Request a blueprint</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tailored Packages (selectable) -->
+    <section id="packages" class="mx-auto max-w-6xl px-6 py-16 fade-up">
+      <h3 class="font-display text-2xl">Tailored packages</h3>
+      <p class="text-white/70 mt-2">Select a package to auto‑configure features; refine anytime in the configurator.</p>
+      <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="package p-6 rounded-xl border border-white/10 bg-ink/40 hover:bg-ink/60 transition cursor-pointer"
+             data-features="responsive,seo,cms,luxuryUI,ecommerce,analytics">
+          <h4 class="font-display text-lg">🌐 Website build</h4>
+          <p class="text-white/70 mt-2">Luxury websites with cinematic polish, locked tokens, and SEO foundation.</p>
+        </div>
+        <div class="package p-6 rounded-xl border border-white/10 bg-ink/40 hover:bg-ink/60 transition cursor-pointer"
+             data-features="mvp,api,cicd,observability,multitenant,payments">
+          <h4 class="font-display text-lg">⚡ SaaS / web app</h4>
+          <p class="text-white/70 mt-2">From MVP to enterprise — bulletproof architecture, automation, and scale.</p>
+        </div>
+        <div class="package p-6 rounded-xl border border-white/10 bg-ink/40 hover:bg-ink/60 transition cursor-pointer"
+             data-features="ai,integrations,ops,security,workflows,offline,dashboards">
+          <h4 class="font-display text-lg">🛠️ Custom applications</h4>
+          <p class="text-white/70 mt-2">Tailored builds with integrations, AI concierge, and enterprise workflows.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Configurator + Price box -->
+    <section class="mx-auto max-w-6xl px-6 py-16 fade-up">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="md:col-span-2 p-6 rounded-xl border border-white/10 bg-ink/40">
+          <h3 class="font-display text-xl">Custom build configurator</h3>
+          <p class="text-white/80 mt-2">Select features. See impact. Request a blueprint.</p>
+          <div id="moduleList" class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+        </div>
+
+        <div class="p-6 rounded-xl border border-white/10 bg-ink/40">
+          <h4 class="font-display text-lg">Estimated investment</h4>
+          <div class="mt-4">
+            <div id="estimate" class="text-3xl font-display gradient-gold bg-clip-text text-transparent">0 ZAR</div>
+            <button id="toggleBreakdown" class="mt-2 text-xs text-white/60 hover:text-white transition">View breakdown ▼</button>
+            <div id="breakdown" class="hidden mt-4 text-sm text-white/80 space-y-2"></div>
+            <p class="text-white/60 mt-3 text-xs">Tip: Packages auto‑add features; fine‑tune everything here.</p>
+            <a href="#contact" class="mt-6 inline-block px-4 py-2 rounded-md bg-white text-ink text-sm hover:opacity-90 transition">Request a blueprint</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing tiers -->
+    <section id="pricing" class="mx-auto max-w-6xl px-6 py-16 fade-up">
+      <h3 class="font-display text-2xl">Pricing tiers</h3>
+      <p class="text-white/80 mt-4 max-w-3xl">Choose a tier to auto‑select recommended features; refine with packages.</p>
+      <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="tier p-6 rounded-xl border border-white/10 bg-ink/40 hover:bg-ink/60 transition cursor-pointer" data-modules="mvp,luxuryUI">
+          <div class="h-1 w-24 gradient-gold"></div>
+          <h4 class="font-display text-lg mt-4">Signature</h4>
+          <div class="text-white/70 text-sm">From 55,000 ZAR</div>
+        </div>
+        <div class="tier relative p-6 rounded-xl border border-white/10 bg-ink/40 hover:bg-ink/60 transition cursor-pointer" data-modules="mvp,luxuryUI,ai,integrations,ops">
+          <div class="absolute -top-3 left-6 text-[10px] px-2 py-1 rounded-full bg-white/10 border border-white/20">Most popular</div>
+          <div class="h-1 w-24 gradient-neon"></div>
+          <h4 class="font-display text-lg mt-4">Concierge</h4>
+          <div class="text-white/70 text-sm">From 95,000 ZAR</div>
+        </div>
+        <div class="tier p-6 rounded-xl border border-white/10 bg-ink/40 hover:bg-ink/60 transition cursor-pointer" data-modules="mvp,luxuryUI,ai,integrations,ops,security,multitenant">
+          <div class="h-1 w-24 bg-white/60"></div>
+          <h4 class="font-display text-lg mt-4">Enterprise</h4>
+          <div class="text-white/70 text-sm">From 145,000 ZAR</div>
+        </div>
+      </div>
+      <div class="mt-10">
+        <a href="#contact" class="px-5 py-3 rounded-md bg-white text-ink text-sm hover:opacity-90 transition">Request a blueprint</a>
+      </div>
+    </section>
+
+    <!-- Case Studies with relevant luxury images -->
+    <section id="case-studies" class="mx-auto max-w-6xl px-6 py-20 fade-up">
+      <h3 class="font-display text-2xl text-center">Case studies</h3>
+      <p class="text-white/70 mt-3 text-center max-w-2xl mx-auto">
+        Flagship projects delivered with luxury-grade DNA, trust, and bulletproof polish.
+      </p>
+
+      <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Nzuri Café (canteen/café ambience) -->
+        <div class="overflow-hidden rounded-xl border border-white/10 bg-ink/40 hover:bg-ink/60 transition">
+          <div class="h-48 w-full overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&w=1200&q=80" alt="Nzuri Café Canteen" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700"/>
+          </div>
+          <div class="p-6">
+            <h4 class="font-display text-lg">☕ Nzuri Café</h4>
+            <p class="text-white/70 mt-2 text-sm">
+              Cinematic ordering app and responsive menu with real-time pricing and premium UX. Elevated brand presence and streamlined operations.
+            </p>
+            <div class="mt-4 text-xs text-white/50">Stack: Vite • Tailwind • Configurator</div>
+          </div>
+        </div>
+
+        <!-- Trading Platform (trading chart/dashboard) -->
+        <div class="overflow-hidden rounded-xl border border-white/10 bg-ink/40 hover:bg-ink/60 transition">
+          <div class="h-48 w-full overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1649972904340-9f2a2e264d8d?auto=format&fit=crop&w=1200&q=80" alt="Trading Platform Dashboard" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700"/>
+          </div>
+          <div class="p-6">
+            <h4 class="font-display text-lg">📈 Trading platform</h4>
+            <p class="text-white/70 mt-2 text-sm">
+              Secure, scalable trading environment built from scratch. Performance-first, compliance-aware, and designed for clarity and trust.
+            </p>
+            <div class="mt-4 text-xs text-white/50">Stack: Node.js • React • NestJS</div>
+          </div>
+        </div>
+
+        <!-- SKGrestaurant (fine dining luxury interior) -->
+        <div class="overflow-hidden rounded-xl border border-white/10 bg-ink/40 hover:bg-ink/60 transition">
+          <div class="h-48 w-full overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1541544741938-0af808871cc7?auto=format&fit=crop&w=1200&q=80" alt="SKGrestaurant Luxury Dining" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700"/>
+          </div>
+          <div class="p-6">
+            <h4 class="font-display text-lg">🍽️ SKGrestaurant</h4>
+            <p class="text-white/70 mt-2 text-sm">
+              A luxury dining brand’s digital flagship. Menu browsing, reservations, and storytelling with cinematic polish and brand integrity.
+            </p>
+            <div class="mt-4 text-xs text-white/50">Stack: Next.js • Tailwind • Framer Motion</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="mx-auto max-w-6xl px-6 py-16 fade-up">
+      <h3 class="font-display text-2xl">Request a blueprint</h3>
+      <p class="text-white/80 mt-4 max-w-3xl">Tell us about your goals. We’ll respond with a concise, strategic plan and investment range.</p>
+
+      <form id="contactForm" class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="text-sm text-white/70">Name</label>
+          <input name="name" class="mt-2 w-full p-3 rounded-md bg-ink/60 border border-white/10 focus:outline-none focus:ring-2 focus:ring-glowGold1" required/>
+        </div>
+        <div>
+          <label class="text-sm text-white/70">Email</label>
+          <input name="email" type="email" value="giftk.rantho@gmail" class="mt-2 w-full p-3 rounded-md bg-ink/60 border border-white/10 focus:outline-none focus:ring-2 focus:ring-glowGold1" required/>
+        </div>
+        <div class="md:col-span-2">
+          <label class="text-sm text-white/70">Company (optional)</label>
+          <input name="company" class="mt-2 w-full p-3 rounded-md bg-ink/60 border border-white/10 focus:outline-none focus:ring-2 focus:ring-glowGold1"/>
+        </div>
+        <div class="md:col-span-2">
+          <label class="text-sm text-white/70">Message</label>
+          <textarea name="message" rows="6" class="mt-2 w-full p-3 rounded-md bg-ink/60 border border-white/10 focus:outline-none focus:ring-2 focus:ring-glowGold1" required></textarea>
+        </div>
+        <div class="md:col-span-2">
+          <button type="submit" class="px-5 py-3 rounded-md bg-white text-ink text-sm hover:opacity-90 transition">Send</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/5 mt-20">
+    <div class="mx-auto max-w-6xl px-6 py-10 text-sm text-white/60">
+      <div class="flex flex-col sm:flex-row justify-between gap-6">
+        <div>
+          <div class="logo-text">DrMcGi’s SaaS Co.</div>
+          <div class="mt-3 flex flex-col gap-2">
+            <a href="mailto:giftk.rantho@gmail" class="flex items-center gap-2 hover:text-glowGold1">✉️ giftk.rantho@gmail</a>
+            <a href="https://wa.me/27649211745" target="_blank" class="flex items-center gap-2 hover:text-glowGold1">📱 +27 64 921 1745</a>
+            <a href="https://github.com/DrMcGi" target="_blank" class="flex items-center gap-2 hover:text-glowGold1">💻 github.com/DrMcGi</a>
+            <a href="https://www.linkedin.com/in/gift-rantho" target="_blank" class="flex items-center gap-2 hover:text-glowGold1">🔗 linkedin.com/in/gift-rantho</a>
+          </div>
+        </div>
+        <div class="space-y-2">
+          <div class="text-white">Quick links</div>
+          <div class="flex gap-4">
+            <a href="#pricing" class="hover:text-white">Pricing</a>
+            <a href="#packages" class="hover:text-white">Packages</a>
+            <a href="#case-studies" class="hover:text-white">Case studies</a>
+            <a href="#contact" class="hover:text-white">Contact</a>
+          </div>
+        </div>
+      </div>
+      <div class="mt-6 text-xs">© <span id="year"></span> DrMcGi’s SaaS Co. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <!-- Floating WhatsApp concierge -->
+  <a id="waButton" href="#" class="fixed bottom-6 right-6 z-50 px-5 py-4 rounded-full bg-[#25D366] text-white shadow-xl flex items-center gap-2 font-medium hover:scale-105 transition-transform">
+    <span>💬</span> Concierge
+  </a>
+
+  <!-- Vanilla JS -->
+  <script>
+    // Footer year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Smooth anchor scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+      });
+    });
+
+    // Scroll progress
+    function updateProgress() {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight ? (scrollTop / docHeight) * 100 : 0;
+      document.getElementById('scrollProgress').style.width = progress + '%';
+    }
+    updateProgress();
+    window.addEventListener('scroll', updateProgress);
+
+    // Fade-up intersection
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // Feature catalog
+    const features = [
+      // Website Build
+      { id: 'responsive', name: 'Responsive Design', price: 8000, category: 'website', desc: 'Mobile‑first, pixel‑perfect layouts.' },
+      { id: 'seo',        name: 'SEO Optimization',   price: 6000, category: 'website', desc: 'Metadata, schema, performance tuning.' },
+      { id: 'cms',        name: 'CMS Integration',    price: 12000, category: 'website', desc: 'WordPress, headless CMS, custom admin.' },
+      { id: 'luxuryUI',   name: 'Luxury UI/UX System',price: 15000, category: 'website', desc: 'Design tokens, motion, editorial spacing.' },
+      { id: 'ecommerce',  name: 'E‑commerce Setup',   price: 20000, category: 'website', desc: 'Catalog, cart, checkout, payments.' },
+      { id: 'analytics',  name: 'Analytics & Tracking', price: 5000, category: 'website', desc: 'GA4, events, funnels, heatmaps.' },
+
+      // SaaS / Web App
+      { id: 'mvp',        name: 'MVP Core',           price: 35000, category: 'saas',    desc: 'Auth, dashboard, CRUD flows.' },
+      { id: 'api',        name: 'Scalable API Architecture', price: 25000, category: 'saas', desc: 'Node.js/NestJS services.' },
+      { id: 'cicd',       name: 'CI/CD Pipelines',    price: 10000, category: 'saas',    desc: 'Automation, environments, deployments.' },
+      { id: 'observability', name: 'Observability & Monitoring', price: 12000, category: 'saas', desc: 'Logs, metrics, alerts.' },
+      { id: 'multitenant', name: 'Multi‑Tenant Support', price: 18000, category: 'saas', desc: 'Orgs, roles, permissions.' },
+      { id: 'payments',   name: 'Payment & Subscription Systems', price: 15000, category: 'saas', desc: 'Stripe/PayPal, recurring billing.' },
+
+      // Custom Applications
+      { id: 'ai',         name: 'AI Concierge',       price: 22000, category: 'custom',  desc: 'Branded assistant for support and FAQs.' },
+      { id: 'integrations', name: 'Integrations Suite', price: 24000, category: 'custom', desc: 'WhatsApp, CRM, ERP, analytics.' },
+      { id: 'ops',        name: 'Automation & DevOps', price: 26000, category: 'custom',  desc: 'Pipelines, monitoring, alerts.' },
+      { id: 'security',   name: 'Security Layer',     price: 20000, category: 'custom',  desc: 'Auth hardening, secrets, threat modeling.' },
+      { id: 'workflows',  name: 'Enterprise Workflows', price: 18000, category: 'custom', desc: 'Approvals, reporting, orchestration.' },
+      { id: 'offline',    name: 'Offline‑First / Mobile Sync', price: 16000, category: 'custom', desc: 'PWA, RN sync, resilience.' },
+      { id: 'dashboards', name: 'Custom Dashboards',  price: 14000, category: 'custom',  desc: 'Tailored analytics and KPIs.' }
+    ];
+
+    // Selection state
+    const selected = new Set(['mvp','luxuryUI']); // defaults
+    let activeTier = null;
+    let activePackage = null;
+
+    // Format currency
+    function formatZAR(n){ return n.toLocaleString('en-ZA') + ' ZAR'; }
+
+    // Pricing logic
+    function computePrice() {
+      let base = 0;
+      features.forEach(f => { if (selected.has(f.id)) base += f.price; });
+      const hasUX = selected.has('luxuryUI');
+      const hasAI = selected.has('ai');
+      const premium = (hasUX && hasAI) ? Math.round(0.08 * base) : Math.round(0.05 * base);
+      const total = Math.round(base + premium);
+      return { base, premium, total };
+    }
+
+    // Estimate animation
+    function animateValue(el, start, end, duration) {
+      if (start === end) { el.textContent = formatZAR(end); return; }
+      let startTime = null;
+      function step(ts) {
+        if (!startTime) startTime = ts;
+        const p = Math.min((ts - startTime)/duration, 1);
+        el.textContent = formatZAR(Math.floor(p*(end-start)+start));
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    // Render feature modules
+    function renderModules() {
+      const container = document.getElementById('moduleList');
+      container.innerHTML = '';
+      features.forEach(f => {
+        const active = selected.has(f.id);
+        const btn = document.createElement('button');
+        btn.className = `text-left p-4 rounded-lg border transition
+          ${active ? 'border-glowGold1 bg-ink shadow-[0_0_20px_rgba(245,208,111,0.3)]'
+                   : 'border-white/10 bg-ink/30 hover:border-white/20 hover:bg-ink/40'}`;
+        btn.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="font-medium">${f.name}</span>
+            <span class="text-white/60 text-sm">${f.price.toLocaleString('en-ZA')} ZAR</span>
+          </div>
+          <p class="text-white/70 text-sm mt-2">${f.desc}</p>
+          <div class="mt-2 text-xs text-white/50">Category: ${f.category}</div>
+        `;
+        btn.addEventListener('click', () => {
+          if (selected.has(f.id)) { selected.delete(f.id); }
+          else { selected.add(f.id); }
+          clearActiveTierHighlight();
+          clearActivePackageHighlight();
+          renderModules();
+          updateEstimate(true);
+        });
+        container.appendChild(btn);
+      });
+    }
+
+    // Render breakdown
+    function renderBreakdown() {
+      const breakdownEl = document.getElementById('breakdown');
+      breakdownEl.innerHTML = '';
+      features.filter(f => selected.has(f.id)).forEach(f => {
+        const row = document.createElement('div');
+        row.className = 'breakdown-row';
+        row.innerHTML = `<div>• ${f.name}</div><div class="text-white/60">${f.price.toLocaleString('en-ZA')} ZAR</div>`;
+        breakdownEl.appendChild(row);
+      });
+
+      const { base, premium, total } = computePrice();
+      const div1 = document.createElement('div'); div1.className = 'divider mt-2'; breakdownEl.appendChild(div1);
+
+      const subtotalRow = document.createElement('div');
+      subtotalRow.className = 'breakdown-row';
+      subtotalRow.innerHTML = `<div>Subtotal</div><div class="text-white/60">${base.toLocaleString('en-ZA')} ZAR</div>`;
+      breakdownEl.appendChild(subtotalRow);
+
+      const premiumRow = document.createElement('div');
+      premiumRow.className = 'breakdown-row';
+      premiumRow.innerHTML = `<div>Premium</div><div class="text-white/60">${premium.toLocaleString('en-ZA')} ZAR</div>`;
+      breakdownEl.appendChild(premiumRow);
+
+      const div2 = document.createElement('div'); div2.className = 'divider'; breakdownEl.appendChild(div2);
+
+      const totalRow = document.createElement('div');
+      totalRow.className = 'breakdown-row font-medium';
+      totalRow.innerHTML = `<div>Total</div><div class="text-white">${total.toLocaleString('en-ZA')} ZAR</div>`;
+      breakdownEl.appendChild(totalRow);
+    }
+
+    // Update estimate
+    function updateEstimate(animated=false) {
+      const est = document.getElementById('estimate');
+      const { total } = computePrice();
+      const current = parseInt((est.textContent||'').replace(/\D/g,'')) || 0;
+      if (animated) animateValue(est, current, total, 800);
+      else est.textContent = formatZAR(total);
+      if (!document.getElementById('breakdown').classList.contains('hidden')) renderBreakdown();
+    }
+
+    // Tier syncing
+    function clearActiveTierHighlight() {
+      document.querySelectorAll('.tier').forEach(c => c.classList.remove('tier-active'));
+      activeTier = null;
+    }
+    function applyTier(card) {
+      const mods = (card.dataset.modules || '').split(',').map(s => s.trim()).filter(Boolean);
+      selected.clear();
+      mods.forEach(id => selected.add(id));
+      clearActivePackageHighlight();
+      document.querySelectorAll('.tier').forEach(c => c.classList.remove('tier-active'));
+      card.classList.add('tier-active');
+      activeTier = card;
+      renderModules();
+      updateEstimate(true);
+    }
+    document.querySelectorAll('.tier').forEach(card => card.addEventListener('click', () => applyTier(card)));
+
+    // Package syncing
+    function clearActivePackageHighlight() {
+      document.querySelectorAll('.package').forEach(c => c.classList.remove('package-active'));
+      activePackage = null;
+    }
+    function togglePackage(card) {
+      const feats = (card.dataset.features || '').split(',').map(s => s.trim()).filter(Boolean);
+      const isActive = card.classList.contains('package-active');
+
+      if (isActive) {
+        feats.forEach(id => selected.delete(id));
+        card.classList.remove('package-active');
+        activePackage = null;
+      } else {
+        feats.forEach(id => selected.add(id));
+        clearActiveTierHighlight();
+        card.classList.add('package-active');
+        activePackage = card;
+      }
+      renderModules();
+      updateEstimate(true);
+    }
+    document.querySelectorAll('.package').forEach(card => card.addEventListener('click', () => togglePackage(card)));
+
+    // Breakdown toggle
+    document.getElementById('toggleBreakdown').addEventListener('click', () => {
+      const b = document.getElementById('breakdown');
+      const btn = document.getElementById('toggleBreakdown');
+      const isHidden = b.classList.contains('hidden');
+      if (isHidden) {
+        b.classList.remove('hidden');
+        btn.textContent = 'Hide breakdown ▲';
+        renderBreakdown();
+      } else {
+        b.classList.add('hidden');
+        btn.textContent = 'View breakdown ▼';
+      }
+    });
+
+    // Initial render
+    renderModules();
+    updateEstimate();
+
+    // Contact form (mock)
+    document.getElementById('contactForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target).entries());
+      alert('Thank you. Your blueprint request has been received.\n\n' + JSON.stringify(data, null, 2));
+      e.target.reset();
+    });
+
+    // WhatsApp concierge (prefilled)
+    document.getElementById('waButton').addEventListener('click', (e) => {
+      e.preventDefault();
+      const picks = [...selected];
+      const { total } = computePrice();
+      const msg = encodeURIComponent(
+        `Blueprint request:\nFeatures: ${picks.join(', ')}\nEstimated: ${total.toLocaleString('en-ZA')} ZAR\nEmail: giftk.rantho@gmail\nLinkedIn: www.linkedin.com/in/gift-rantho\nGitHub: https://github.com/DrMcGi`
+      );
+      const phone = '27649211745';
+      window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
+    });
+  </script>
+</body>
+</html>
